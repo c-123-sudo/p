@@ -1,0 +1,18 @@
+ import pandas as pd
+ data = pd.read_csv('lab1.csv')
+ data = data.values.tolist()
+ def find_s(data):
+    # Initialize hypothesis with the first positive example
+    hypothesis = data[0][:-1]
+    print("Initial Most Specific Hypothesis:", hypothesis)
+    # Iterate through each example
+    for example in data:
+        if example[-1] == "Yes":
+            # Generalize the hypothesis
+            hypothesis = [h if h == x else "?" for h, x in zip(hypothesis, example[:-1])]
+            print(f"Example: {example[:-1]}, Target: {example[-1]}")
+            print("General Hypothesis:", hypothesis)
+    return hypothesis
+ # Execute Find-S algorithm
+ final_hypothesis = find_s(data)
+ print("Final Hypothesis:", final_hypothesis)
