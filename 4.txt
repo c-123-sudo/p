@@ -1,0 +1,31 @@
+ import numpy as np
+ from sklearn.datasets import load_iris
+ from sklearn.model_selection import train_test_split
+ from sklearn.preprocessing import OneHotEncoder, StandardScaler
+ # Activation functions
+ sigmoid = lambda x: 1 / (1 + np.exp(-x))
+ sigmoid_derivative = lambda x: x * (1 - x)
+ # Preprocess data
+ iris = load_iris()
+ X, y = StandardScaler().fit_transform(iris.data), OneHotEncoder(sparse_output=False).fit_tra
+ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=64)
+ # Initialize network
+ np.random.seed(42)
+ w_inh, w_ho = np.random.rand(4, 5), np.random.rand(5, 3)
+ b_h, b_o = np.zeros((1, 5)), np.zeros((1, 3))
+ # Train
+ for epoch in range(500):
+ h_out = sigmoid(np.dot(X_train, w_inh) + b_h)
+ o_out = sigmoid(np.dot(h_out, w_ho) + b_o)
+ g_o = (o_out - y_train) * sigmoid_derivative(o_out)
+ g_h = np.dot(g_o, w_ho.T) * sigmoid_derivative(h_out)
+ w_ho -= 0.01 * np.dot(h_out.T, g_o)
+ b_o -= 0.01 * np.sum(g_o, axis=0, keepdims=True)
+ w_inh -= 0.01 * np.dot(X_train.T, g_h)
+ b_h -= 0.01 * np.sum(g_h, axis=0, keepdims=True)
+ if epoch % 100 == 0: print(f"Epoch {epoch}, Loss: {np.mean((y_train - o_out) ** 2):.4f}
+ # Test
+ h_out = sigmoid(np.dot(X_test, w_inh) + b_h)
+ o_out = sigmoid(np.dot(h_out, w_ho) + b_o)
+ acc = np.mean(np.argmax(o_out, axis=1) == np.argmax(y_test, axis=1)) * 100
+ print(f"Test Accuracy: {acc:.2f}%")
