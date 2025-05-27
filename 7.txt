@@ -1,0 +1,36 @@
+ import pandas as pd
+ import numpy as np
+ from sklearn.datasets import load_iris
+ from sklearn.mixture import GaussianMixture
+ from sklearn.cluster import KMeans
+ from sklearn.metrics import silhouette_score
+ # Load the Iris dataset
+ iris = load_iris()
+ X = iris.data  # Features
+ true_labels = iris.target  # Actual labels for reference
+ # --- Clustering using the EM algorithm (GMM) --
+gmm = GaussianMixture(3)  # Number of clusters = 3
+ gmm.fit(X)
+ gmm_labels = gmm.predict(X)
+ gmm_silhouette = silhouette_score(X, gmm_labels)
+ print("\nClustering using the EM algorithm (GMM):")
+ print(f"Cluster assignments: {gmm_labels}")
+ print(f"Silhouette Score (EM): {gmm_silhouette:.2f}")
+ # --- Clustering using the k-Means algorithm --
+kmeans = KMeans(3)  # Number of clusters = 3
+ kmeans.fit(X)
+ kmeans_labels = kmeans.predict(X)
+ kmeans_silhouette = silhouette_score(X, kmeans_labels)
+ print("\nClustering using the k-Means algorithm:")
+ print(f"Cluster assignments: {kmeans_labels}")
+ print(f"Silhouette Score (k-Means): {kmeans_silhouette:.2f}")
+ # --- Comparison of Results --
+print("\nComparison of Clustering Results:")
+ print(f"Silhouette Score (EM): {gmm_silhouette:.2f}")
+ print(f"Silhouette Score (k-Means): {kmeans_silhouette:.2f}")
+ if gmm_silhouette > kmeans_silhouette:
+ print("EM algorithm provides better clustering quality based on silhouette score.")
+ elif gmm_silhouette < kmeans_silhouette:
+ print("k-Means provides better clustering quality based on silhouette score.")
+ else:
+ print("Both algorithms provide similar clustering quality.")
