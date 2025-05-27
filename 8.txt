@@ -3,30 +3,29 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 
-# Load and split the Iris dataset
-data = load_iris()
-X, y = data.data, data.target
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=64)
+# Load the Iris dataset
+iris = load_iris()
+X = iris.data  # Features
+y = iris.target  # Labels
 
-# Train and predict using k-NN classifier
-k = 3
-knn = KNeighborsClassifier(n_neighbors=k)
-knn.fit(X_train, y_train)
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.8, random_state=42)
+
+# Initialize the k-NN classifier (using k=3)
+knn = KNeighborsClassifier(n_neighbors=3)
+knn.fit(X_train, y_train)  # Train the classifier
+
+# Make predictions on the test set
 y_pred = knn.predict(X_test)
 
 # Calculate accuracy
 accuracy = accuracy_score(y_test, y_pred)
-print(f"Accuracy: {accuracy:.2f}")
+print(f"Accuracy: {accuracy * 100:.2f}%\n")
 
-# Print predictions
-predictions = [(x, pred, actual) for x, pred, actual in zip(X_test, y_pred, y_test)]
-correct_predictions = [p for p in predictions if p[1] == p[2]]
-wrong_predictions = [p for p in predictions if p[1] != p[2]]
-
-print("\nCorrect Predictions:")
-for x, pred, actual in correct_predictions:
-    print(f"Data: {x}, Predicted: {data.target_names[pred]}")
-
-print("\nWrong Predictions:")
-for x, pred, actual in wrong_predictions:
-    print(f"Data: {x}, Predicted: {data.target_names[pred]}, Actual: {data.target_names[actual]}")
+# Print correct and wrong predictions
+print("Predictions on test data:")
+for i in range(len(y_test)):
+    if y_test[i] == y_pred[i]:
+        print(f"Correct Prediction: True Label = {iris.target_names[y_test[i]]}, Predicted Label = {iris.target_names[y_pred[i]]}")
+    else:
+        print(f"Wrong Prediction: True Label = {iris.target_names[y_test[i]]}, Predicted Label = {iris.target_names[y_pred[i]]}")
