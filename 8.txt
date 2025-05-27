@@ -1,0 +1,32 @@
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+# Load and split the Iris dataset
+data = load_iris()
+X, y = data.data, data.target
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=64)
+
+# Train and predict using k-NN classifier
+k = 3
+knn = KNeighborsClassifier(n_neighbors=k)
+knn.fit(X_train, y_train)
+y_pred = knn.predict(X_test)
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy:.2f}")
+
+# Print predictions
+predictions = [(x, pred, actual) for x, pred, actual in zip(X_test, y_pred, y_test)]
+correct_predictions = [p for p in predictions if p[1] == p[2]]
+wrong_predictions = [p for p in predictions if p[1] != p[2]]
+
+print("\nCorrect Predictions:")
+for x, pred, actual in correct_predictions:
+    print(f"Data: {x}, Predicted: {data.target_names[pred]}")
+
+print("\nWrong Predictions:")
+for x, pred, actual in wrong_predictions:
+    print(f"Data: {x}, Predicted: {data.target_names[pred]}, Actual: {data.target_names[actual]}")
