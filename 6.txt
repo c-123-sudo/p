@@ -1,29 +1,36 @@
 import pandas as pd
- from pgmpy.models import BayesianNetwork
- from pgmpy.estimators import MaximumLikelihoodEstimator
- from pgmpy.inference import VariableElimination
- # Load the dataset
- data = pd.read_csv("heart.csv")
- # Define the structure of the Bayesian Network
- model = BayesianNetwork([
- ('age', 'target'),
- ('sex', 'target'),
- ('chol', 'target'),
- ('trestbps', 'target')
- ])
- # Train the model using Maximum Likelihood Estimation
- model.fit(data, estimator=MaximumLikelihoodEstimator)
- # Perform inference
- inference = VariableElimination(model)
- # Query 1: Probability of heart disease given age = 45
- query1 = inference.query(variables=['target'], evidence={'age': 45})
- print("Probability of heart disease given age = 45:")
- print(query1)
- # Query 2: Probability of heart disease given chol = 250
- query2 = inference.query(variables=['target'], evidence={'chol': 270})
- print("\nProbability of heart disease given chol = 270:")
- print(query2)
- # Query 3: Probability of heart disease given trestbps = 140
- query3 = inference.query(variables=['target'], evidence={'trestbps': 170})
- print("\nProbability of heart disease given trestbps = 170:")
- print(query3)
+from pgmpy.models import BayesianNetwork
+from pgmpy.estimators import MaximumLikelihoodEstimator
+from pgmpy.inference import VariableElimination
+
+# Load the dataset
+data = pd.read_csv("heart.csv")
+
+# Define the structure of the Bayesian Network
+model = BayesianNetwork([
+    ('age', 'target'),
+    ('sex', 'target'),
+    ('chol', 'target'),
+    ('trestbps', 'target')
+])
+
+# Train the model using Maximum Likelihood Estimation
+model.fit(data, estimator=MaximumLikelihoodEstimator)
+
+# Perform inference
+inference = VariableElimination(model)
+
+# Query 1: Probability of heart disease given age = 45
+query1 = inference.query(variables=['target'], evidence={'age': 45})
+print("Probability of heart disease given age = 45:")
+print(query1)
+
+# Query 2: Probability of heart disease given chol = 250
+query2 = inference.query(variables=['target'], evidence={'chol': 270})
+print("\nProbability of heart disease given chol = 270:")
+print(query2)
+
+# Query 3: Probability of heart disease given trestbps = 140
+query3 = inference.query(variables=['target'], evidence={'trestbps': 170})
+print("\nProbability of heart disease given trestbps = 170:")
+print(query3)
