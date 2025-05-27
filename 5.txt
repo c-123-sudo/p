@@ -1,0 +1,22 @@
+ from sklearn.model_selection import train_test_split
+ from sklearn.naive_bayes import GaussianNB
+ from sklearn import metrics
+ from sklearn.datasets import load_iris
+ dataset = load_iris()
+ X = dataset.data  # Feature matrix
+ y = dataset.target  # Labels
+ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.8, random_state=42)
+ # Train the Naive Bayes model
+ model = GaussianNB()
+ model.fit(X_train, y_train)
+ # Make predictions
+ predictions = model.predict(X_test)
+ # Calculate accuracy
+ accuracy = metrics.accuracy_score(y_test, predictions)
+ print("Accuracy: ", accuracy * 100)
+ result_df = pd.DataFrame({
+ 'Actual': y_test,
+ 'Predicted': predictions
+ })
+ print("\nPredictions vs Actual values:")
+ print(result_df)
